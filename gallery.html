@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Institute Gallery</title>
+  <style>
+    :root{
+      --bg: #0b1220;
+      --card: #0f1724;
+      --accent: #23fcd8;
+      --muted: #94a3b8;
+      --glass: rgba(255,255,255,0.03);
+      font-family: Inter, Roboto, system-ui, -apple-system, "Segoe UI", "Helvetica Neue", Arial;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;background:linear-gradient(180deg,#071021 0%, #081526 100%);color:#e6eefc}
+
+    header{padding:28px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:52px;height:52px;border-radius:10px;background:linear-gradient(135deg,var(--accent),#6cc8ff);display:flex;align-items:center;justify-content:center;font-weight:700;color:#022}
+    h1{font-size:20px;margin:0}
+    p.lead{margin:0;color:var(--muted);font-size:13px}
+
+    .controls{display:flex;gap:12px;align-items:center}
+    .filters{display:flex;gap:8px;flex-wrap:wrap}
+    .filters button{background:var(--glass);border:1px solid rgba(255,255,255,0.04);padding:8px 12px;border-radius:10px;color:var(--muted);cursor:pointer}
+    .filters button.active{background:linear-gradient(90deg, rgba(35,252,216,0.12), rgba(108,200,255,0.06));color:var(--accent);border-color:rgba(35,252,216,0.18)}
+
+    .upload{display:flex;gap:8px;align-items:center}
+    .upload input[type=file]{display:none}
+    .btn{background:linear-gradient(90deg,#0f1724, rgba(255,255,255,0.02));border:1px solid rgba(255,255,255,0.04);padding:10px 14px;border-radius:10px;color:var(--muted);cursor:pointer}
+
+    main{padding:20px}
+    .gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.03);position:relative}
+    .card img{
+      display:block;
+      width:100%;
+      height:auto; /* keep original aspect ratio */
+      object-fit:cover;
+      border-radius:4px;
+      image-rendering:auto;
+      -webkit-backface-visibility:hidden;
+      transform:translateZ(0);
+    }
+    .meta{padding:10px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .meta .title{font-weight:600;font-size:14px}
+    .meta .tag{background:rgba(255,255,255,0.03);padding:6px 8px;border-radius:8px;font-size:12px;color:var(--muted)}
+
+    .lightbox{position:fixed;inset:0;background:rgba(3,6,10,0.8);display:flex;align-items:center;justify-content:center;z-index:60;opacity:0;pointer-events:none;transition:opacity .18s}
+    .lightbox.open{opacity:1;pointer-events:auto}
+    .lb-inner{max-width:90%;max-height:90%;position:relative}
+    .lb-inner img{max-width:100%;max-height:80vh;display:block;border-radius:10px}
+    .lb-caption{color:var(--muted);margin-top:8px;text-align:center}
+    .lb-close, .lb-prev, .lb-next{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.35);border:1px solid rgba(255,255,255,0.04);padding:8px;border-radius:8px;cursor:pointer;color:var(--muted)}
+    .lb-close{right:8px;top:8px;transform:none}
+    .lb-prev{left:-56px}
+    .lb-next{right:-56px}
+
+    @media (max-width:600px){
+      .lb-prev{left:8px}
+      .lb-next{right:8px}
+      .lb-prev,.lb-next{top:auto;bottom:8px;transform:none}
+      .lb-close{right:8px}
+    }
+
+    .empty{padding:40px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);text-align:center;color:var(--muted)}
+    footer{padding:18px 20px;color:var(--muted);font-size:13px;text-align:center}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="logo">I</div>
+      <div>
+        <h1>IAPS Institute Gallery</h1>
+        <p class="lead">Showcase — events, students, infrastructure</p>
+      </div>
+    </div>
+    <div class="controls">
+      <div class="filters">
+        <button class="filter active" data-filter="all">All</button>
+        <button class="filter" data-filter="events">Events</button>
+        <button class="filter" data-filter="students">Students</button>
+        <button class="filter" data-filter="infra">Infrastructure</button>
+      </div>
+      <div class="upload">
+        <label class="btn" for="file">Upload</label>
+        <input type="file" id="file" accept="image/*" multiple />
+        <button class="btn" id="clear">Clear</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div id="gallery" class="gallery" aria-live="polite"></div>
+    <div id="empty" class="empty" style="display:none">No images found. Upload images to populate the gallery.</div>
+  </main>
+
+  <div id="lightbox" class="lightbox" aria-hidden="true">
+    <div class="lb-inner" role="dialog" aria-modal="true">
+      <button class="lb-close" id="lbClose" aria-label="Close">✕</button>
+      <button class="lb-prev" id="lbPrev" aria-label="Previous">◀</button>
+      <button class="lb-next" id="lbNext" aria-label="Next">▶</button>
+      <img id="lbImage" src="" alt="" />
+      <div id="lbCaption" class="lb-caption"></div>
+    </div>
+  </div>
+
+  <footer>Tip: Press ← and → to navigate images, Esc to close.</footer>
+
+  <script>
+    const samples = [
+      {src:'img1.jpg', title:'Institute Logo', tag:'logo'},
+      {src:'A5.jpeg', title:'Computer Lab', tag:'lab'},
+      {src:'A2.jpeg', title:'Lab', tag:'lab'},
+      {src:'A6.jpeg', title:'Training', tag:'training'},
+      {src:'A1.jpeg', title:'Training', tag:'training'},
+      {src:'A3.jpeg', title:'Students Workshop', tag:'workshop'},
+    ];
+
+    const gallery = document.getElementById('gallery');
+    const empty = document.getElementById('empty');
+    const fileInput = document.getElementById('file');
+    const clearBtn = document.getElementById('clear');
+    const filters = document.querySelectorAll('.filter');
+
+    let items = [];
+    let activeFilter = 'all';
+
+    const lb = document.getElementById('lightbox');
+    const lbImage = document.getElementById('lbImage');
+    const lbCaption = document.getElementById('lbCaption');
+    const lbClose = document.getElementById('lbClose');
+    const lbPrev = document.getElementById('lbPrev');
+    const lbNext = document.getElementById('lbNext');
+    let currentIndex = -1;
+
+    function init(){
+      items = [...samples];
+      render();
+      attachEvents();
+    }
+
+    function render(){
+      gallery.innerHTML = '';
+      const visible = items.filter(it => activeFilter==='all' ? true : it.tag===activeFilter);
+      empty.style.display = visible.length===0 ? 'block' : 'none';
+
+      visible.forEach(it=>{
+        const card = document.createElement('article');
+        card.className = 'card';
+        card.tabIndex = 0;
+        card.innerHTML = `
+          <img src="${it.src}" srcset="${it.src} 1x, ${it.src} 2x" loading="lazy" alt="${escapeHtml(it.title)}" />
+          <div class="meta">
+            <div class="title">${escapeHtml(it.title)}</div>
+            <div class="tag">${escapeHtml(capitalize(it.tag))}</div>
+          </div>`;
+        card.addEventListener('click', ()=> openLightbox(items.indexOf(it)));
+        card.addEventListener('keydown', e=>{ if(e.key==='Enter') openLightbox(items.indexOf(it)); });
+        gallery.appendChild(card);
+      });
+    }
+
+    function attachEvents(){
+      filters.forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          filters.forEach(b=>b.classList.remove('active'));
+          btn.classList.add('active');
+          activeFilter = btn.dataset.filter;
+          render();
+        });
+      });
+
+      fileInput.addEventListener('change', handleFiles);
+      clearBtn.addEventListener('click', ()=>{ items = [...samples]; render(); });
+
+      lbClose.addEventListener('click', closeLightbox);
+      lbPrev.addEventListener('click', showPrev);
+      lbNext.addEventListener('click', showNext);
+
+      document.addEventListener('keydown', e=>{
+        if(lb.classList.contains('open')){
+          if(e.key==='Escape') closeLightbox();
+          if(e.key==='ArrowLeft') showPrev();
+          if(e.key==='ArrowRight') showNext();
+        }
+      });
+
+      lb.addEventListener('click', e=>{ if(e.target===lb) closeLightbox(); });
+    }
+
+    function handleFiles(e){
+      const files = Array.from(e.target.files || []);
+      if(files.length===0) return;
+
+      const readers = files.map(file=>{
+        return new Promise((res, rej)=>{
+          const r = new FileReader();
+          r.onload = ()=>{
+            res({src:r.result, title:file.name, tag:'students'});
+          };
+          r.onerror = rej;
+          r.readAsDataURL(file);
+        });
+      });
+
+      Promise.all(readers).then(results=>{
+        items = results.concat(items);
+        fileInput.value = '';
+        render();
+      }).catch(()=> alert('Failed to load some images.'));
+    }
+
+    function openLightbox(idx){
+      if(idx<0 || idx>=items.length) return;
+      currentIndex = idx;
+      const it = items[currentIndex];
+      lbImage.src = it.src;
+      lbCaption.textContent = it.title + ' — ' + capitalize(it.tag);
+      lb.classList.add('open');
+      lb.setAttribute('aria-hidden','false');
+      lbClose.focus();
+    }
+
+    function closeLightbox(){
+      lb.classList.remove('open');
+      lb.setAttribute('aria-hidden','true');
+      lbImage.src = '';
+      currentIndex = -1;
+    }
+
+    function showPrev(){
+      currentIndex = currentIndex<=0 ? items.length - 1 : currentIndex - 1;
+      openLightbox(currentIndex);
+    }
+    function showNext(){
+      if(currentIndex===-1) return;
+      currentIndex = currentIndex>=items.length-1 ? 0 : currentIndex + 1;
+      openLightbox(currentIndex);
+    }
+
+    function capitalize(s){ return s.charAt(0).toUpperCase()+s.slice(1);}
+    function escapeHtml(s){ return String(s).replace(/[&<>\"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','\\':'&#92;','"':'&quot;'}[c])); }
+
+    init();
+  </script>
+  <footer style="background: #0066cc; color: white; padding: 20px; text-align: center;">
+        <p>&copy; 2025 IAPS Training Academy. All rights reserved.</p>
+        <p>Follow us on:
+            
+      <a href="https://www.facebook.com" target="https://www.facebook.com/share/16niuAufKV/">Facebook</a> |
+        <a href="https://www.linkedin.com" target="https://www.linkedin.com/in/prasanna-katel-335740253?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app">LinkedIn</a>
+
+        </p>
+ </footer>
+</body>
+  
+</html>

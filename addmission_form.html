@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Student Registration Form</title>
+  <style>
+    /* Reset and font */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      padding: 20px;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    h1 {
+      text-align: center;
+      color: #fff;
+      margin-bottom: 20px;
+      font-size: 2rem;
+      letter-spacing: 1px;
+    }
+
+    form {
+      background-color: rgba(255, 255, 255, 0.95);
+      padding: 30px;
+      border-radius: 15px;
+      max-width: 650px;
+      width: 100%;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      animation: fadeIn 0.8s ease;
+    }
+
+    label {
+      display: block;
+      margin-top: 12px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="tel"],
+    input[type="email"],
+    input[type="date"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      outline: none;
+      transition: 0.3s;
+      background: #f9f9f9;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: #4facfe;
+      box-shadow: 0 0 8px rgba(79, 172, 254, 0.6);
+      background: #fff;
+    }
+
+    input[type="radio"],
+    input[type="checkbox"] {
+      margin-right: 6px;
+    }
+
+    .checkbox-group,
+    .radio-group {
+      margin-bottom: 15px;
+      color: #444;
+    }
+
+    input[type="submit"],
+    input[type="reset"] {
+      padding: 12px 25px;
+      margin-top: 10px;
+      margin-right: 10px;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    input[type="reset"] {
+      background: linear-gradient(135deg, #f5576c, #f093fb);
+    }
+
+    input[type="submit"]:hover,
+    input[type="reset"]:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    /* Animation for form appearance */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      form {
+        padding: 20px;
+      }
+      h1 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <h1>Admission Form</h1>
+    <form action="display.html" method="get">
+      <label>First Name:</label>
+      <input type="text" name="fname" required>
+
+      <label>Surname:</label>
+      <input type="text" name="lname" required>
+      
+      <label>Age:</label>
+      <input type="number" name="age" required>
+       
+      <label>Gender:</label>
+      <div class="radio-group">
+        <input type="radio" name="gender" value="Male" required> Male
+        <input type="radio" name="gender" value="Female"> Female
+        <input type="radio" name="gender" value="Other"> Other
+      </div>
+      
+      <label>Department:</label>
+      <input type="text" name="department">
+
+      <label>Semester:</label>
+      <input type="text" name="semester">
+
+      <label>Mother's Name:</label>
+      <input type="text" name="mother">
+
+      <label>Father's Name:</label>
+      <input type="text" name="father">
+
+      <label>Phone Number:</label>
+      <input type="tel" name="phone">
+
+      <label>Email ID:</label>
+      <input type="email" name="email">
+
+      <label>Qualification:</label>
+      <input type="text" name="qualification">
+      
+      <label>State:</label>
+      <textarea name="State" rows="1"></textarea>
+      
+      <label>District:</label>
+      <textarea name="District" rows="1"></textarea>
+
+      <label>Address:</label>
+      <textarea name="address" rows="3"></textarea>
+
+      <label>Date of Birth:</label>
+      <input type="date" name="dob">
+
+      <label>Occupation:</label>
+      <input type="text" name="Occupation">
+
+      <label>Nationality:</label>
+      <input type="text" name="nationality">
+       
+      <label>Caste:</label>
+      <select name="caste">
+        <option value="">--Select--</option>
+        <option value="SC">SC</option>
+        <option value="OBC">OBC</option>
+        <option value="ST">ST</option>
+        <option value="GENERAL">GENERAL</option>
+      </select>
+
+      <!-- New PAN and Aadhaar Fields -->
+      <label>PAN Card Number:</label>
+      <input type="text" name="pan" pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}" title="Enter a valid PAN (e.g., ABCDE1234F)" maxlength="10" required>
+
+      <label>Aadhaar Number:</label>
+      <input type="text" name="aadhaar" pattern="[0-9]{12}" title="Enter a valid 12-digit Aadhaar number" maxlength="12" required>
+
+      <label>Languages Known:</label>
+      <div class="checkbox-group">
+        <input type="checkbox" name="lang" value="English"> English
+        <input type="checkbox" name="lang" value="Hindi"> Hindi
+        <input type="checkbox" name="lang" value="Other"> Other
+      </div>
+
+      <label>Blood Group:</label>
+      <select name="bloodgroup">
+        <option value="">--Select--</option>
+        <option value="A+">A+</option>
+        <option value="A-">A-</option>
+        <option value="B+">B+</option>
+        <option value="B-">B-</option>
+        <option value="O+">O+</option>
+        <option value="O-">O-</option>
+        <option value="AB+">AB+</option>
+        <option value="AB-">AB-</option>
+      </select>
+
+      <label>Course Applied For:</label>
+      <select name="course" required>
+        <option value="">--Select--</option>
+        <option value="PGDCA">PGDCA</option>
+        <option value="PGDCSA">PGDCSA</option>
+        <option value="DCA">DCA</option>
+        <option value="ADCA">ADCA</option>
+        <option value="Video and photo editing using Canva">Video and photo editing using Canva</option>
+        <option value="Artificial intelligent and data science">Artificial intelligent and data science</option>
+        <option value="Software Development">Software Development</option>
+        <option value="Web Development">Web Development</option>
+        <option value="App Development">App Development</option>
+      </select>
+
+      <input type="submit" value="Submit">
+      <input type="reset" value="Reset">
+    </form>
+  </div>
+</body>
+</html>

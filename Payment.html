@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Payment Checkout</title>
+<style>
+  :root{
+    --bg: #0b1220;
+    --panel: #121a2b;
+    --muted: #95a0b4;
+    --text: #e8eefc;
+    --accent: #6c8cff;
+    --accent-2:#3ed17b;
+    --error:#ff6b6b;
+    --border:#223150;
+    --ring: rgba(108,140,255,.35);
+    --radius: 14px;
+    --radius-sm: 10px;
+    --shadow: 0 10px 30px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    background: radial-gradient(1200px 600px at 80% -10%, rgba(108,140,255,.15), transparent 60%),
+                radial-gradient(1000px 500px at -10% 110%, rgba(62,209,123,.12), transparent 60%),
+                var(--bg);
+    color:var(--text);
+    font: 15px/1.5 system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans";
+    display:grid;
+    place-items:center;
+    padding: 28px 12px;
+  }
+  .wrap{
+    width:100%;
+    max-width:1000px;
+    display:grid;
+    gap:18px;
+    grid-template-columns: 1.1fr .9fr;
+  }
+  @media (max-width: 860px){
+    .wrap{grid-template-columns: 1fr}
+  }
+  .card{
+    background: linear-gradient(180deg, rgba(255,255,255,.02), transparent 28%) , var(--panel);
+    border:1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow:hidden;
+  }
+  .head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:18px 20px;
+    border-bottom:1px dashed var(--border);
+  }
+  .amount-chip{
+    font-weight:700;
+    background:linear-gradient(180deg, rgba(108,140,255,.15), rgba(108,140,255,.08));
+    padding:8px 12px;
+    border-radius: 999px;
+    border:1px solid var(--border);
+  }
+  .body{ padding: 20px; display:grid; gap:18px; }
+  .grid{ display:grid; gap:14px; grid-template-columns: 1fr 1fr; }
+  .grid-3{ display:grid; gap:14px; grid-template-columns: 1fr 1fr 1fr; }
+  .full{ grid-column: 1 / -1 }
+  @media (max-width: 600px){
+    .grid,.grid-3{ grid-template-columns: 1fr }
+  }
+  label{ display:block; font-size: 12.5px; color: var(--muted); margin-bottom:6px; }
+  .input{
+    position:relative;
+    display:flex; align-items:center;
+    border:1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    background: #0f1730;
+    transition:.2s border,.2s box-shadow;
+  }
+  .input:focus-within{
+    border-color:var(--accent);
+    box-shadow: 0 0 0 6px var(--ring);
+  }
+  .input input, .input select{
+    width:100%;
+    border:none; outline:none;
+    background:transparent; color:var(--text);
+    font-size:15px;
+  }
+  .hint{ font-size:12px; color:var(--muted); margin-top:6px }
+  .error { color: var(--error); font-size:12.5px; display:none; margin-top:6px }
+  .tabs{ display:flex; gap:10px; flex-wrap:wrap }
+  .tab{
+    cursor:pointer; user-select:none;
+    padding:10px 14px;
+    border:1px solid var(--border);
+    border-radius: 999px;
+    color:var(--muted);
+    background:#0f1730;
+    transition:.2s;
+  }
+  .tab.active{
+    color:var(--text);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 6px var(--ring);
+  }
+  .pay-method{ display:none }
+  .pay-method.active{ display:block; }
+  .save{ display:flex; align-items:center; gap:10px; font-size:14px; color:var(--muted);}
+  .save input{ width:18px; height:18px; }
+  .actions{ display:flex; gap:12px; align-items:center; justify-content:flex-end; }
+  .btn{
+    cursor:pointer;
+    border:none; outline:none;
+    padding:12px 16px;
+    border-radius: 10px;
+    font-weight:700;
+    transition:.15s transform, .2s opacity, .2s box-shadow;
+  }
+  .btn:active{ transform: translateY(1px) }
+  .btn-secondary{
+    background:#0f1730; color:var(--text); border:1px solid var(--border);
+  }
+  .btn-primary{
+    background: linear-gradient(180deg, var(--accent), #4667ff);
+    color:white;
+    box-shadow: 0 10px 24px rgba(108,140,255,.35), inset 0 -10px 15px rgba(0,0,0,.15);
+  }
+  .note{ font-size:12.5px; color:var(--muted); text-align:center; padding:8px 16px 18px; }
+  .summary{ position:sticky; top:18px }
+  .summary .body{ gap:14px }
+  .line{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:10px 0;
+    border-bottom:1px dashed var(--border);
+  }
+  .line:last-child{ border-bottom:none }
+  .pill{
+    font-size:12px; color:var(--muted);
+    padding:5px 8px; border:1px solid var(--border);
+    border-radius:999px; background:#0f1730;
+  }
+  .rupee::before{ content:"₹"; margin-right:4px; opacity:.9 }
+  .brand{ font-size:12px; color:var(--muted) }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <!-- Left: Checkout -->
+  <section class="card">
+    <div class="head">
+      <h1>Checkout</h1>
+      <div class="amount-chip rupee" id="amountChip">1499</div>
+    </div>
+    <form class="body" id="paymentForm" novalidate>
+      <div class="grid full">
+        <div>
+          <label for="customerName">Full Name</label>
+          <div class="input">
+            <input id="customerName" name="name" placeholder="e.g.: Rohit Sharma " required />
+          </div>
+          <div class="error" id="errName">Please enter your name</div>
+        </div>
+        <div>
+          <label for="customerEmail">Email</label>
+          <div class="input">
+            <input id="customerEmail" name="email" type="email" placeholder="you@example.com" required />
+          </div>
+          <div class="error" id="errEmail">Please enter a valid email</div>
+        </div>
+      </div>
+      <div class="grid">
+        <div>
+          <label for="amount">Amount (INR)</label>
+          <div class="input">
+            <input id="amount" name="amount" placeholder="1499" required />
+          </div>
+          <div class="error" id="errAmount">Amount is required</div>
+        </div>
+        <div>
+          <label for="purpose">Purpose of Payment</label>
+          <div class="input">
+            <select id="purpose" name="purpose">
+              <option value="course">Course Fee</option>
+              <option value="admission">Admission</option>
+              <option value="exam">Exam Fee</option>
+              <option value="other" selected>Other</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <!-- Tabs -->
+      <div class="tabs">
+        <button type="button" class="tab active" data-target="#cardPay">Card</button>
+        <button type="button" class="tab" data-target="#upiPay">UPI</button>
+        <button type="button" class="tab" data-target="#netbankingPay">NetBanking</button>
+      </div>
+      <!-- CARD -->
+      <div id="cardPay" class="pay-method active">
+        <div class="grid-3">
+          <div class="full">
+            <label for="cardNumber">Card Number</label>
+            <div class="input">
+              <input id="cardNumber" name="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" />
+            </div>
+          </div>
+          <div>
+            <label for="cardName">Name on Card</label>
+            <div class="input">
+              <input id="cardName" name="cardName" placeholder="Cardholder Name" />
+            </div>
+          </div>
+          <div>
+            <label for="exp">Expiry (MM/YY)</label>
+            <div class="input">
+              <input id="exp" name="exp" placeholder="MM/YY" maxlength="5" />
+            </div>
+          </div>
+          <div>
+            <label for="cvv">CVV</label>
+            <div class="input">
+              <input id="cvv" name="cvv" placeholder="***" maxlength="4" />
+            </div>
+          </div>
+        </div>
+        <label class="save">
+          <input type="checkbox" id="saveCard" /> Save card for future
+        </label>
+      </div>
+      <!-- UPI -->
+      <div id="upiPay" class="pay-method">
+        <div>
+          <label for="upiId">UPI ID</label>
+          <div class="input">
+            <input id="upiId" name="upi" placeholder="username@upi" />
+          </div>
+          <div class="error" id="errUpi">Please enter your UPI ID</div>
+        </div>
+      </div>
+      <!-- NetBanking -->
+      <div id="netbankingPay" class="pay-method">
+        <div>
+          <label for="bank">Select Your Bank</label>
+          <div class="input">
+            <select id="bank" name="bank">
+              <option value="">— Select Bank —</option>
+              <option>SBI</option>
+              <option>HDFC Bank</option>
+              <option>ICICI Bank</option>
+              <option>Axis Bank</option>
+            </select>
+          </div>
+          <div class="error" id="errBank">Please select a bank</div>
+        </div>
+      </div>
+      <div class="actions">
+        <button type="button" class="btn btn-secondary" id="btnReset">Reset</button>
+        <button type="submit" class="btn btn-primary">Pay Now</button>
+      </div>
+      <p class="note">Demo UI — Payment gateway integration required for real payments.</p>
+    </form>
+  </section>
+  <!-- Right: Summary -->
+  <aside class="card summary">
+    <div class="head">
+      <h1>Order Summary</h1>
+      <span class="pill" id="methodPill">Card</span>
+    </div>
+    <div class="body">
+      <div class="line"><span>Payee</span><strong>IAPS Training Academy</strong></div>
+      <div class="line"><span>Purpose</span><strong id="sumPurpose">Other</strong></div>
+      <div class="line"><span>Amount</span><strong class="rupee" id="sumAmt">1499</strong></div>
+      <div class="line"><span>Total</span><strong class="rupee" id="sumTotal">1499</strong></div>
+    </div>
+  </aside>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const form = document.getElementById('paymentForm');
+  const tabs = document.querySelectorAll('.tab');
+  const methods = document.querySelectorAll('.pay-method');
+  const methodPill = document.getElementById('methodPill');
+
+  // Tab switching
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      methods.forEach(m => m.classList.remove('active'));
+      tab.classList.add('active');
+      document.querySelector(tab.dataset.target).classList.add('active');
+      methodPill.textContent = tab.textContent.trim();
+    });
+  });
+
+  // Form submit validation + Receipt
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    let valid = true;
+
+    // Reset errors
+    document.querySelectorAll('.error').forEach(el => el.style.display = 'none');
+
+    // Basic checks
+    if (!document.getElementById('customerName').value.trim()) {
+      document.getElementById('errName').style.display = 'block';
+      valid = false;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(document.getElementById('customerEmail').value.trim())) {
+      document.getElementById('errEmail').style.display = 'block';
+      valid = false;
+    }
+    if (!/^\d+$/.test(document.getElementById('amount').value.trim())) {
+      document.getElementById('errAmount').style.display = 'block';
+      valid = false;
+    }
+
+    const activeMethod = document.querySelector('.tab.active').textContent.trim();
+    if (activeMethod === 'UPI') {
+      if (!document.getElementById('upiId').value.trim()) {
+        document.getElementById('errUpi').style.display = 'block';
+        valid = false;
+      }
+    }
+    if (activeMethod === 'NetBanking') {
+      if (!document.getElementById('bank').value.trim()) {
+        document.getElementById('errBank').style.display = 'block';
+        valid = false;
+      }
+    }
+
+    if (!valid) return;
+
+    // Auto institute name
+    const instituteName = "IAPS Training Academy";
+
+    // Create receipt UI
+    const name = document.getElementById('customerName').value.trim();
+    const email = document.getElementById('customerEmail').value.trim();
+    const amount = document.getElementById('amount').value.trim();
+    const purpose = document.getElementById('purpose').value;
+    const method = activeMethod;
+    const date = new Date().toLocaleString();
+
+    const receiptHTML = `
+      <div style="background:#fff;padding:20px;border-radius:10px;color:#000;max-width:500px;margin:auto;box-shadow:0 5px 20px rgba(0,0,0,0.2);">
+        <h2 style="text-align:center;color:#333;">${instituteName}</h2>
+        <p style="text-align:center;color:#666;font-size:14px;margin-top:-8px;">Official Payment Receipt</p>
+        <hr/>
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Purpose:</strong> ${purpose}</p>
+        <p><strong>Payment Method:</strong> ${method}</p>
+        <p><strong>Amount Paid:</strong> ₹${amount}</p>
+        <p><strong>Date:</strong> ${date}</p>
+        <hr/>
+        <p style="text-align:center;color:green;font-weight:bold;">Payment Successful</p>
+      </div>
+    `;
+
+    document.body.innerHTML = receiptHTML; // Replace page content with receipt
+  });
+
+  document.getElementById('btnReset').addEventListener('click', function() {
+    form.reset();
+    document.querySelectorAll('.error').forEach(e => e.style.display = 'none');
+  });
+});
+</script>
+
+</body>
+</html>

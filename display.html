@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>General Details</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #0b1220; color: white; padding: 20px; }
+    h2 { text-align: center; color: #6c8cff; }
+    .details-box { max-width: 700px; margin: auto; background: #1a1f35; padding: 20px; border-radius: 10px; }
+    p { display: flex; justify-content: space-between; padding: 5px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    span { background: #2a3050; padding: 3px 8px; border-radius: 5px; }
+
+    footer {
+      margin-top: auto;
+      text-align: center;
+      padding: 10px;
+      background: #1a1f35;
+      color: #bbb;
+      border-radius: 10px;
+    }
+
+    footer p {
+      margin: 10px 0;
+      font-size: 18px;
+    }
+
+    .print-btn {
+      display: block;
+      margin: 20px auto;
+      padding: 10px 20px;
+      background: #6c8cff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .print-btn:hover {
+      background: #4a6cd8;
+    }
+
+    @media print {
+      .print-btn { display: none; } /* Hide print button on print */
+      body { background: white; color: black; }
+      .details-box { background: white; color: black; }
+      span { background: none; color: black; }
+      footer { background: white; color: black; }
+    }
+  </style>
+</head>
+
+<body>
+  <h2>General Details</h2>
+  <div class="details-box">
+    <p>First Name: <span id="fname"></span></p>
+    <p>Surname: <span id="lname"></span></p>
+    <p>Age: <span id="age"></span></p>
+    <p>Gender: <span id="gender"></span></p>
+    <p>Department: <span id="department"></span></p>
+    <p>Semester: <span id="semester"></span></p>
+    <p>Mother's Name: <span id="mother"></span></p>
+    <p>Father's Name: <span id="father"></span></p>
+    <p>Phone: <span id="phone"></span></p>
+    <p>Email: <span id="email"></span></p>
+    <p>Qualification: <span id="qualification"></span></p>
+    <p>State: <span id="state"></span></p>
+    <p>District: <span id="District"></span></p>
+    <p>Address: <span id="address"></span></p>
+    <p>Date of Birth: <span id="dob"></span></p>
+    <p>Occupation: <span id="Occupation"></span></p>
+    <p>Nationality: <span id="nationality"></span></p>
+    <p>Caste: <span id="caste"></span></p>
+    <p>PAN Card Number: <span id="pan"></span></p>
+    <p>Aadhaar Number: <span id="aadhaar"></span></p>
+    <p>Languages Known: <span id="lang"></span></p>
+    <p>Blood Group: <span id="bloodgroup"></span></p>
+    <p>Course Applied For: <span id="course"></span></p>
+  </div>
+
+  <button class="print-btn" onclick="window.print()">🖨 Print Details</button>
+
+  <footer>
+    <p>&copy; 2025 IAPS Training Academy. All rights reserved.</p>
+  </footer>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    document.getElementById("fname").textContent = params.get("fname");
+    document.getElementById("lname").textContent = params.get("lname");
+    document.getElementById("age").textContent = params.get("age");
+    document.getElementById("gender").textContent = params.get("gender");
+    document.getElementById("department").textContent = params.get("department");
+    document.getElementById("semester").textContent = params.get("semester");
+    document.getElementById("mother").textContent = params.get("mother");
+    document.getElementById("father").textContent = params.get("father");
+    document.getElementById("phone").textContent = params.get("phone");
+    document.getElementById("email").textContent = params.get("email");
+    document.getElementById("qualification").textContent = params.get("qualification");
+    document.getElementById("state").textContent = params.get("State");
+    document.getElementById("District").textContent = params.get("District");
+    document.getElementById("address").textContent = params.get("address");
+    document.getElementById("dob").textContent = params.get("dob");
+    document.getElementById("Occupation").textContent = params.get("Occupation");
+    document.getElementById("nationality").textContent = params.get("nationality");
+    document.getElementById("caste").textContent = params.get("caste");
+    document.getElementById("pan").textContent = params.get("pan");
+    document.getElementById("aadhaar").textContent = params.get("aadhaar");
+    document.getElementById("lang").textContent = params.getAll("lang").join(", ");
+    document.getElementById("bloodgroup").textContent = params.get("bloodgroup");
+    document.getElementById("course").textContent = params.get("course");
+  </script>
+</body>
+</html>

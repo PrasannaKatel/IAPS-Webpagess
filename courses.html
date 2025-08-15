@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Our Courses</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #0b1220;
+        color: #fff;
+        margin: 0;
+        padding: 0;
+    }
+    .container {
+        max-width: 1200px;
+        margin: auto;
+        padding: 20px;
+    }
+    .section-title {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    .section-title h2 {
+        color: #6c8cff;
+        font-size: 2.2rem;
+        margin-bottom: 10px;
+    }
+    .section-title p {
+        color: #ccc;
+    }
+    .courses-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+    }
+    .course-card {
+        background: #121a2b;
+        border-radius: 10px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        transition: transform 0.3s ease;
+    }
+    .course-card:hover {
+        transform: translateY(-5px);
+    }
+    .course-img img {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+    }
+    .course-content {
+        padding: 15px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+    .course-content h3 {
+        margin: 0 0 10px;
+        color: #fff;
+    }
+    .course-meta {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.9rem;
+        color: #ccc;
+        margin-bottom: 10px;
+    }
+    .course-desc {
+        font-size: 0.9rem;
+        color: #bbb;
+        flex-grow: 1;
+    }
+    .course-btn {
+        display: inline-block;
+        margin-top: 15px;
+        padding: 10px 15px;
+        background: #6c8cff;
+        color: #fff;
+        border-radius: 5px;
+        text-align: center;
+        text-decoration: none;
+        transition: background 0.3s ease;
+    }
+    .course-btn:hover {
+        background: #5575e6;
+    }
+
+    /* Enroll Form Popup */
+    .enroll-form {
+        display: none;
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0,0,0,0.7);
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+    .form-box {
+        background: #1e2638;
+        padding: 20px;
+        border-radius: 10px;
+        width: 90%;
+        max-width: 500px;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+    .form-box h2 {
+        margin-bottom: 15px;
+        color: #6c8cff;
+    }
+    .course-detail-text {
+        font-size: 0.9rem;
+        color: #ccc;
+        margin-bottom: 15px;
+        background: #121a2b;
+        padding: 10px;
+        border-radius: 5px;
+    }
+    .form-box label {
+        display: block;
+        margin: 10px 0 5px;
+        font-size: 0.9rem;
+    }
+    .form-box input, .form-box select {
+        width: 100%;
+        padding: 8px;
+        border: none;
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+    .form-box button {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        background: #6c8cff;
+        color: #fff;
+        border-radius: 5px;
+        font-size: 1rem;
+        cursor: pointer;
+    }
+    .form-box button:hover {
+        background: #5575e6;
+    }
+    .close-btn {
+        background: red;
+        margin-top: 5px;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <section id="courses">
+        <div class="section-title">
+            <h2>Our Courses</h2>
+            <p>Choose from our wide range of professional courses</p>
+        </div>
+
+        <div class="courses-grid" id="courseList">
+            <!-- Courses are inserted here via JS for cleaner detail handling -->
+        </div>
+    </section>
+</div>
+
+<!-- Enroll Form Popup -->
+<div class="enroll-form" id="enrollForm">
+    <div class="form-box">
+        <h2 id="popupTitle">Course Enrollment</h2>
+        <div class="course-detail-text" id="courseDetailsText"></div>
+        <form>
+            <label for="courseName">Course</label>
+            <input type="text" id="courseName" readonly>
+
+            <label for="fullName">Full Name</label>
+            <input type="text" id="fullName" placeholder="Enter your name" required>
+
+            <label for="email">Email</label>
+            <input type="email" id="email" placeholder="Enter your email" required>
+
+            <label for="phone">Phone</label>
+            <input type="tel" id="phone" placeholder="Enter your phone number" required>
+
+            <button type="submit">Submit</button>
+            <button type="button" class="close-btn" onclick="closeForm()">Cancel</button>
+        </form>
+    </div>
+</div>
+
+<script>
+const courses = [
+    {
+        name: "PGDCA",
+        duration: "1 Year",
+        price: "₹18,000",
+        image: "PGDCA.jpg",
+        description: "Post Graduate Diploma in Computer Applications covering advanced topics in programming, databases and software development."
+    },
+    {
+        name: "ADCA",
+        duration: "1 Year",
+        price: "₹15,000",
+        image: "ADCA.jpeg",
+        description: "Advanced Diploma in Computer Applications with focus on practical skills for office automation and basic programming."
+    },
+    {
+        name: "DCA",
+        duration: "6 Months",
+        price: "₹12,000",
+        image: "DCA.jpeg",
+        description: "Diploma in Computer Applications covering fundamental computer skills and office applications."
+    },
+    {
+        name: "Video & Photo Editing (Canva)",
+        duration: "3 Months",
+        price: "₹10,000",
+        image: "canva.jpeg",
+        description: "Master graphic design, photo and video editing using Canva for social media and professional use."
+    },
+    {
+        name: "Web Development",
+        duration: "6 Months",
+        price: "₹15,000",
+        image: "WEB.jpeg",
+        description: "Learn front-end and back-end web development with HTML, CSS, JavaScript, and popular frameworks."
+    },
+    {
+        name: "App Development",
+        duration: "6 Months",
+        price: "₹16,000",
+        image: "APP.jpeg",
+        description: "Build mobile applications for Android and iOS platforms using modern development tools and languages."
+    },
+    {
+        name: "Software Development",
+        duration: "1 Year",
+        price: "₹20,000",
+        image: "SOF.jpeg",
+        description: "Comprehensive training in software engineering principles, development methodologies and project management."
+    },
+    {
+        name: "AI & Data Science",
+        duration: "1 Year",
+        price: "₹20,000",
+        image: "AI.jpeg",
+        description: "Cutting-edge course covering Artificial Intelligence, Machine Learning and Data Science fundamentals."
+    }
+];
+
+// Populate course cards
+const courseList = document.getElementById("courseList");
+courses.forEach(c => {
+    const card = document.createElement("div");
+    card.className = "course-card";
+    card.innerHTML = `
+        <div class="course-img"><img src="${c.image}" alt="${c.name}"></div>
+        <div class="course-content">
+            <h3>${c.name}</h3>
+            <div class="course-meta"><span>${c.duration}</span><span>${c.price}</span></div>
+            <p class="course-desc">${c.description}</p>
+            <a href="javascript:void(0)" class="course-btn" onclick="openForm('${c.name}')">Enroll Now</a>
+        </div>
+    `;
+    courseList.appendChild(card);
+});
+
+function openForm(courseName) {
+    const course = courses.find(c => c.name === courseName);
+    document.getElementById('courseName').value = course.name;
+    document.getElementById('popupTitle').innerText = `Enroll in ${course.name}`;
+    document.getElementById('courseDetailsText').innerText = `${course.description} Duration: ${course.duration}, Fees: ${course.price}`;
+    document.getElementById('enrollForm').style.display = 'flex';
+}
+function closeForm() {
+    document.getElementById('enrollForm').style.display = 'none';
+}
+</script>
+
+</body>
+</html>

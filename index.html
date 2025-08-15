@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IAPS Academy, Biswanath</title>
+  <style>
+        :root {
+            --primary: #23fcd8;
+            --secondary: #3498db;
+            --light: #2186a0;
+            --dark: #2c3e50;
+            --accent: #e74c3c;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: rgb(4, 48, 77);
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        
+        .logo {
+            max-width: 150px;
+            height: auto;
+        }
+        
+        nav {
+            background-color: var(--dark);
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .menu {
+            display: flex;
+            list-style: none;
+        }
+        
+        .menu li {
+            position: relative;
+        }
+        
+        .menu li a {
+            color: white;
+            text-decoration: none;
+            padding: 15px 20px;
+            display: block;
+            transition: background-color 0.3s;
+        }
+        
+        .menu li a:hover {
+            background-color: var(--secondary);
+        }
+        
+        .search-bar {
+            display: none;
+            padding: 10px;
+        }
+        
+        .search-bar input {
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: none;
+            width: 200px;
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 10px;
+        }
+        
+        .hero {
+            height: 400px;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://via.placeholder.com/1920x600?text=IAPS+Academy');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+        }
+        
+        .hero-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .hero-content p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 30px;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--secondary);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .section-title h2 {
+            color: var(--primary);
+            font-size: 2rem;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+        
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background-color: var(--secondary);
+        }
+        
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .course-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        
+        .course-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .course-img {
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .course-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .course-card:hover .course-img img {
+            transform: scale(1.1);
+        }
+        
+        .course-content {
+            padding: 20px;
+        }
+        
+        .course-content h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+        
+        .course-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            color: #666;
+        }
+        
+        .course-price {
+            color: var(--accent);
+            font-weight: bold;
+        }
+        
+        .course-desc {
+            margin-bottom: 20px;
+            color: #555;
+        }
+        
+        .course-btn {
+            display: inline-block;
+            background-color: var(--secondary);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        
+        .course-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .slider-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            overflow: hidden;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .slider {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+            height: 100%;
+        }
+        
+        .slide {
+            min-width: 100%;
+            height: 100%;
+        }
+        
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .slider-nav {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+        }
+        
+        .slider-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.5);
+            margin: 0 5px;
+            cursor: pointer;
+        }
+        
+        .slider-dot.active {
+            background-color: white;
+        }
+        
+        section {
+            background-color: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th,
+        td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        
+        form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        button {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+            grid-column: span 2;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        .required::after {
+            content: " *";
+            color: var(--accent);
+        }
+        
+        #formData {
+            display: none;
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid var(--secondary);
+        }
+
+        /* UPDATED FOOTER STYLE */
+        footer {
+            background: linear-gradient(135deg, #ff512f, #dd2476);
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+            box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            text-align: left;
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 15px;
+            color: #ffd700;
+        }
+
+        .quick-links {
+            list-style: none;
+        }
+
+        .quick-links li {
+            margin-bottom: 8px;
+        }
+
+        .quick-links a {
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .quick-links a:hover {
+            color: #ffeb3b;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+        }
+
+        .copyright {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            grid-column: span 3;
+        }
+          
+        @media (max-width: 992px) {
+            .footer-content {
+                grid-template-columns: 1fr 1fr;
+            }
+            .copyright {
+                grid-column: span 2;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                padding: 10px;
+            }
+            .menu {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+            }
+            .menu.active {
+                display: flex;
+            }
+            .mobile-menu-btn {
+                display: block;
+                position: absolute;
+                top: 20px;
+                right: 20px;
+            }
+            .search-bar {
+                width: 100%;
+                padding: 10px 0;
+            }
+            .search-bar input {
+                width: 100%;
+            }
+            form {
+                grid-template-columns: 1fr;
+            }
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+            button {
+                grid-column: span 1;
+            }
+            .hero {
+                height: 300px;
+            }
+            .hero-content h2 {
+                font-size: 2rem;
+            }
+            .slider-container {
+                height: 300px;
+            }
+        }
+        
+        @media (min-width: 769px) {
+            .search-bar {
+                display: block;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+            .copyright {
+                grid-column: span 1;
+            }
+            .hero {
+                height: 250px;
+            }
+            .hero-content h2 {
+                font-size: 1.5rem;
+            }
+            .slider-container {
+                height: 200px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <img src="img1.jpg" alt="IAPS Academy Logo" class="logo">
+        <h1>IAPS Academy, Biswanath</h1>
+        <button class="mobile-menu-btn">☰</button>
+    </header>
+
+    <nav>
+        <div class="nav-container">
+            <ul class="menu">
+                <li><a href="#home">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="addmission_form.html">Admissions</a></li>
+                <li><a href="courses.html">Courses</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="contact.html">Contact Us</a></li>
+                <li><a href="Payment.html">Payment</a></li>
+            </ul>
+            <div class="search-bar">
+                <input type="text" placeholder="Search courses..." id="courseSearch">
+            </div>
+        </div>
+    </nav>
+
+    <section id="gallery">
+        <div class="section-title">
+            <h2>Gallery</h2>
+            <p>Moments from our campus life</p>
+        </div>
+        <div class="slider-container">
+            <div class="slider">
+                <div class="slide">
+                    <img src="A1.jpeg" alt="Classroom Session">
+                </div>
+                <div class="slide">
+                    <img src="A2.jpeg" alt="Workshop at IAPS Academy">
+                </div>
+                <div class="slide">
+                    <img src="A3.jpeg" alt="Campus Event">
+                </div>
+                <div class="slide">
+                    <img src="A4.jpeg" alt="Student Project Showcase">
+             </div> 
+              
+             <div class="slide">
+                    <img src="A5.jpeg" alt="Graduation Ceremony">
+                </div>
+                <div class="slide">
+                    <img src="A6.jpeg" alt="Guest Lecture">
+                </div>
+            </div>
+            
+            <div class="slider-nav">
+                <div class="slider-dot active" data-index="0"></div>
+                <div class="slider-dot" data-index="1"></div>
+                <div class="slider-dot" data-index="2"></div>
+                <div class="slider-dot" data-index="3"></div>
+                <div class="slider-dot" data-index="4"></div>
+                <div class="slider-dot" data-index="5"></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h2>Empowering Futures Through Quality Education</h2>
+            <p>Join IAPS Academy, Biswanath to gain industry-relevant skills and kickstart your career in the digital world</p>
+            <a href="#admission" class="btn">Apply Now</a>
+        </div>
+    </section>
+
+    <div class="container">
+        <section id="courses">
+            <div class="section-title">
+                <h2>Our Courses</h2>
+                <p>Choose from our wide range of professional courses</p>
+            </div>
+
+            <div class="courses-grid">
+                <div class="course-card">
+                    <div class="course-img">
+                        <img src="PGDCA.jpg" alt="PGDCA Course">
+                    </div>
+                    <div class="course-content">
+                        <h3>PGDCA</h3>
+                        <div class="course-meta">
+                            <span class="course-duration">1 Year</span>
+                            <span class="course-price">₹18,000</span>
+                        </div>
+                        <p class="course-desc">Post Graduate Diploma in Computer Applications covering advanced topics in programming, databases and software development.</p>
+                        <a href="#pgdca-details" class="course-btn">Course Details</a>
+                    </div>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-img">
+                        <img src="ADCA.jpeg" alt="ADCA Course">
+                    </div>
+                    <div class="course-content">
+                        <h3>ADCA</h3>
+                        <div class="course-meta">
+                            <span class="course-duration">1 Year</span>
+                            <span class="course-price">₹15,000</span>
+                        </div>
+                        <p class="course-desc">Advanced Diploma in Computer Applications with focus on practical skills for office automation and basic programming.</p>
+                        <a href="#adca-details" class="course-btn">Course Details</a>
+                    </div>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-img">
+                        <img src="DCA.jpeg" alt="DCA Course">
+                    </div>
+                    <div class="course-content">
+                        <h3>DCA</h3>
+                        <div class="course-meta">
+                            <span class="course-duration">6 Months</span>
+                            <span class="course-price">₹12,000</span>
+                        </div>
+                        <p class="course-desc">Diploma in Computer Applications covering fundamental computer skills and office applications.</p>
+                        <a href="#dca-details" class="course-btn">Course Details</a>
+                    </div>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-img">
+                        <img src="canva.jpeg" alt="Canva Course">
+                    </div>
+                    <div class="course-content">
+                        <h3>Video & Photo Editing (Canva)</h3>
+                        <div class="course-meta">
+                            <span class="course-duration">3 Months</span>
+                            <span class="course-price">₹10,000</span>
+                        </div>
+                        <p class="course-desc">Master graphic design, photo and video editing using Canva for social media and professional use.</p>
+                        <a href="#canva-details" class="course-btn">Course Details</a>
+                    </div>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-img">
+                        <img src="WEB.jpeg" alt="Web Development Course">
+                    </div>
+                    <div class="course-content">
+                        <h3>Web Development</h3>
+                        <div class="course-meta">
+                            <span class="course-duration">6 Months</span>
+                            <span class="course-price">₹15,000</span>
+                        </div>
+                        <p class="course-desc">Learn front-end and back-end web development with HTML, CSS, JavaScript, and popular frameworks.</p>
+                        <a href="#webdev-details" class="course-btn">Course Details</a>
+                    </div>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-img">
+                        <img src="APP.jpeg" alt="App Development Course">
+                    </div>
+                    <div class="course-content">
+                        <h3>App Development</h3>
+                        <div class="course-meta">
+                            <span class="course-duration">6 Months</span>
+                            <span class="course-price">₹16,000</span>
+                        </div>
+                        <p class="course-desc">Build mobile applications for Android and iOS platforms using modern development tools and languages.</p>
+                        <a href="#appdev-details" class="course-btn">Course Details</a>
+                    </div>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-img">
+                        <img src="SOF.jpeg" alt="Software Development Course">
+                    </div>
+                    <div class="course-content">
+                        <h3>Software Development</h3>
+                        <div class="course-meta">
+                            <span class="course-duration">1 Year</span>
+                            <span class="course-price">₹20,000</span>
+                        </div>
+                        <p class="course-desc">Comprehensive training in software engineering principles, development methodologies and project management.</p>
+                        <a href="#software-details" class="course-btn">Course Details</a>
+                    </div>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-img">
+                        <img src="AI.jpeg" alt="AI & Data Science Course">
+                    </div>
+                    <div class="course-content">
+                        <h3>AI & Data Science</h3>
+                        <div class="course-meta">
+                            <span class="course-duration">1 Year</span>
+                            <span class="course-price">₹20,000</span>
+                        </div>
+                        <p class="course-desc">Cutting-edge course covering Artificial Intelligence, Machine Learning and Data Science fundamentals.</p>
+                        <a href="#aids-details" class="course-btn">Course Details</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+ 
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <p><strong>Address:</strong> IAPS Academy, Main Road, Biswanath, Assam, India - 784176</p>
+                <p><strong>Phone:</strong> +91 9876543210</p>
+                <p><strong>Email:</strong> info@iapsacademybiswanath.edu.in</p>
+            </div>
+
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul class="quick-links">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#courses">Courses</a></li>
+                    <li><a href="#admission">Admissions</a></li>
+                    <li><a href="#gallery">Gallery</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="#payment">Make Payment</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3>Opening Hours</h3>
+                <p><strong>Monday - Friday:</strong> 9:00 AM - 5:00 PM</p>
+                <p><strong>Saturday:</strong> 9:00 AM - 2:00 PM</p>
+                <p><strong>Sunday:</strong> Closed</p>
+            </div>
+
+            <div class="copyright">
+              
+    <p>&copy; 2025 IAPS Training Academy. All rights reserved.</p>
+    <p>Follow us on 
+        
+     <a href="https://www.facebook.com" target="https://www.facebook.com/share/16niuAufKV/">Facebook</a> |
+        <a href="https://www.linkedin.com" target="https://www.linkedin.com/in/prasanna-katel-335740253?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app">LinkedIn</a>
+
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const menu = document.querySelector('.menu');
+
+        mobileMenuBtn.addEventListener('click', function() {
+            menu.classList.toggle('active');
+        });
+
+        // Course Search Functionality
+        const courseSearch = document.getElementById('courseSearch');
+        const courseCards = document.querySelectorAll('.course-card');
+
+        courseSearch.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+
+            courseCards.forEach(card => {
+                const courseName = card.querySelector('h3').textContent.toLowerCase();
+                const courseDesc = card.querySelector('.course-desc').textContent.toLowerCase();
+
+                if (courseName.includes(searchTerm) || courseDesc.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+
+        // Image Slider
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const dots = document.querySelectorAll('.slider-dot');
+
+        function showSlide(index) {
+            if (index >= slides.length) currentSlide = 0;
+            if (index < 0) currentSlide = slides.length - 1;
+
+            document.querySelector('.slider').style.transform = `translateX(-${currentSlide * 100}%)`;
+
+            dots.forEach(dot => dot.classList.remove('active'));
+            dots[currentSlide].classList.add('active');
+        }
+
+        function nextSlide() {
+            currentSlide++;
+            showSlide(currentSlide);
+        }
+
+        // Auto slide change every 5 seconds
+        setInterval(nextSlide, 5000);
+
+        // Dot navigation
+        dots.forEach(dot => {
+            dot.addEventListener('click', function() {
+                currentSlide = parseInt(this.getAttribute('data-index'));
+                showSlide(currentSlide);
+            });
+        });
+
+        // Form Submission
+        document.getElementById('admissionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Validate required fields
+            const requiredFields = this.querySelectorAll('[required]');
+            let isValid = true;
+
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    field.style.borderColor = 'red';
+                    isValid = false;
+                } else {
+                    field.style.borderColor = '#ddd';
+                }
+            });
+
+            if (!isValid) {
+                alert('Please fill all required fields!');
+                return;
+            }
+
+            // Display form data
+            const formData = new FormData(this);
+            let output = '<h3>Your Application Details:</h3><ul>';
+
+            for (let [key, value] of formData.entries()) {
+                if (value.trim() !== '') {
+                    output += `<li><strong>${key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}:</strong> ${value}</li>`;
+                }
+            }
+
+            output += '</ul><p>Thank you for your application! We will contact you soon.</p>';
+            document.getElementById('formData').innerHTML = output;
+            document.getElementById('formData').style.display = 'block';
+
+            // Scroll to form data
+            document.getElementById('formData').scrollIntoView({
+                behavior: 'smooth'
+            });
+
+            // Reset form
+            this.reset();
+        });
+
+        // Input validation
+        document.getElementById('phone').addEventListener('input', function() {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+
+        document.getElementById('aadhaar').addEventListener('input', function() {
+            this.value = this.value.replace(/[^0-9]/g, '').substring(0, 12);
+        });
+
+        document.getElementById('pan').addEventListener('input', function() {
+            this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+        });
+
+        // Smooth scrolling for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+
+                    // Close mobile menu if open
+                    menu.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

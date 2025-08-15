@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About - IAPS Training Academy</title>
+<style>
+    /* General Reset */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+        background: #f9fafc;
+        color: #333;
+        line-height: 1.6;
+    }
+
+    /* Header */
+    header {
+        background: linear-gradient(90deg, #0066cc, #00aaff);
+        color: white;
+        padding: 15px 8%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+    }
+    .header-left {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+    .logo {
+        height: 60px;
+        border-radius: 10px;
+    }
+    header h1 {
+        font-size: 1.8rem;
+        letter-spacing: 1px;
+    }
+    nav ul {
+        list-style: none;
+        display: flex;
+        gap: 20px;
+    }
+    nav ul li a {
+        color: white;
+        text-decoration: none;
+        font-weight: 500;
+        padding: 8px 14px;
+        border-radius: 6px;
+        transition: 0.3s;
+    }
+    nav ul li a:hover, nav ul li a.active {
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* About Section */
+    .about-container {
+        width: 85%;
+        margin: 50px auto;
+        text-align: center;
+        animation: fadeIn 1s ease-in-out;
+    }
+    .about-container h2 {
+        color: #0066cc;
+        font-size: 2.2rem;
+        margin-bottom: 20px;
+        position: relative;
+    }
+    .about-container h2::after {
+        content: '';
+        position: absolute;
+        width: 80px;
+        height: 4px;
+        background: #00aaff;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 2px;
+    }
+    .about-container p {
+        font-size: 1.1rem;
+        color: #555;
+        max-width: 800px;
+        margin: auto;
+        line-height: 1.8;
+    }
+
+    /* Features Section */
+    .features {
+        width: 85%;
+        margin: 50px auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 25px;
+    }
+    .feature-box {
+        background: white;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0px 5px 15px rgba(0,0,0,0.08);
+        text-align: center;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .feature-box:hover {
+        transform: translateY(-8px);
+        box-shadow: 0px 8px 20px rgba(0,0,0,0.15);
+    }
+    .feature-box h3 {
+        color: #00aaff;
+        margin-bottom: 12px;
+        font-size: 1.4rem;
+    }
+    .feature-box p {
+        font-size: 1rem;
+        color: #666;
+    }
+
+    /* Footer */
+    footer {
+        background: #0066cc;
+        color: white;
+        text-align: center;
+        padding: 25px 10px;
+        margin-top: 50px;
+    }
+    footer p {
+        margin: 6px 0;
+    }
+    footer a {
+        color: #ffcc00;
+        text-decoration: none;
+    }
+    footer a:hover {
+        text-decoration: underline;
+    }
+
+    /* Animation */
+    @keyframes fadeIn {
+        from {opacity: 0; transform: translateY(20px);}
+        to {opacity: 1; transform: translateY(0);}
+    }
+
+    /* Responsive Fix */
+    @media (max-width: 768px) {
+        header {
+            flex-direction: column;
+            gap: 15px;
+        }
+        nav ul {
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .about-container, .features {
+            width: 92%;
+        }
+    }
+</style>
+</head>
+<body>
+
+<header>
+    <div class="header-left">
+        <img src="img1.jpg" alt="Website Logo" class="logo">
+        <h1>IAPS TRAINING ACADEMY</h1>
+    </div>
+    <nav>
+        <ul>
+            <li><a href="about.html" class="active">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="addmission_form.html">Admission</a></li>
+        </ul>
+    </nav>
+</header>
+
+<!-- About Section -->
+<section class="about-container">
+    <h2>About Us</h2>
+    <p>
+        IAPS Training Academy is a leading institute dedicated to providing top-quality education 
+        in computer applications, software development, web design, and emerging technologies. 
+        Our mission is to equip students with the knowledge and skills they need to excel in today’s 
+        competitive digital world. We blend theory with practical training to ensure our students 
+        are industry-ready.
+    </p>
+</section>
+
+<!-- Features -->
+<section class="features">
+    <div class="feature-box">
+        <h3>🎯 Our Mission</h3>
+        <p>
+            To empower students through innovative learning experiences, 
+            enabling them to achieve excellence in technology and beyond.
+        </p>
+    </div>
+    <div class="feature-box">
+        <h3>🌟 Our Vision</h3>
+        <p>
+            To be recognized as a premier training academy that nurtures 
+            creativity, critical thinking, and professional skills.
+        </p>
+    </div>
+    <div class="feature-box">
+        <h3>💼 Why Choose Us?</h3>
+        <p>
+            Experienced faculty, hands-on projects, modern infrastructure, 
+            and a strong focus on career development.
+        </p>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer>
+    <p>&copy; 2025 IAPS Training Academy. All rights reserved.</p>
+    <p>Follow us on 
+        
+     <a href="https://www.facebook.com" target="https://www.facebook.com/share/16niuAufKV/">Facebook</a> |
+        <a href="https://www.linkedin.com" target="https://www.linkedin.com/in/prasanna-katel-335740253?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app">LinkedIn</a>
+
+    </p>
+</footer>
+
+</body>
+</html>
