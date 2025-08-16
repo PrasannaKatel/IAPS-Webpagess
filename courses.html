@@ -12,6 +12,45 @@
         margin: 0;
         padding: 0;
     }
+
+    /* Navigation Bar */
+    nav {
+        background: #121a2b;
+        padding: 10px 20px;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+    .nav-container {
+        max-width: 1200px;
+        margin: auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .menu {
+        list-style: none;
+        display: flex;
+        gap: 20px;
+        margin: 0;
+        padding: 0;
+    }
+    .menu li a {
+        color: #fff;
+        text-decoration: none;
+        font-size: 1rem;
+        transition: color 0.3s;
+    }
+    .menu li a:hover {
+        color: #6c8cff;
+    }
+    .search-bar input {
+        padding: 6px 10px;
+        border-radius: 5px;
+        border: none;
+        outline: none;
+    }
+
     .container {
         max-width: 1200px;
         margin: auto;
@@ -19,7 +58,7 @@
     }
     .section-title {
         text-align: center;
-        margin-bottom: 30px;
+        margin: 30px 0;
     }
     .section-title h2 {
         color: #6c8cff;
@@ -153,15 +192,32 @@
 </head>
 <body>
 
+<!-- Navigation -->
+<nav>
+    <div class="nav-container">
+        <ul class="menu">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="addmission_form.html">Admissions</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+            <li><a href="Payment.html">Payment</a></li>
+        </ul>
+        <div class="search-bar">
+            <input type="text" placeholder="Search courses..." id="courseSearch">
+        </div>
+    </div>
+</nav>
+
 <div class="container">
     <section id="courses">
         <div class="section-title">
             <h2>Our Courses</h2>
             <p>Choose from our wide range of professional courses</p>
         </div>
-
+ 
         <div class="courses-grid" id="courseList">
-            <!-- Courses are inserted here via JS for cleaner detail handling -->
+            <!-- Courses are inserted here via JS -->
         </div>
     </section>
 </div>
@@ -192,79 +248,42 @@
 
 <script>
 const courses = [
-    {
-        name: "PGDCA",
-        duration: "1 Year",
-        price: "₹18,000",
-        image: "PGDCA.jpg",
-        description: "Post Graduate Diploma in Computer Applications covering advanced topics in programming, databases and software development."
-    },
-    {
-        name: "ADCA",
-        duration: "1 Year",
-        price: "₹15,000",
-        image: "ADCA.jpeg",
-        description: "Advanced Diploma in Computer Applications with focus on practical skills for office automation and basic programming."
-    },
-    {
-        name: "DCA",
-        duration: "6 Months",
-        price: "₹12,000",
-        image: "DCA.jpeg",
-        description: "Diploma in Computer Applications covering fundamental computer skills and office applications."
-    },
-    {
-        name: "Video & Photo Editing (Canva)",
-        duration: "3 Months",
-        price: "₹10,000",
-        image: "canva.jpeg",
-        description: "Master graphic design, photo and video editing using Canva for social media and professional use."
-    },
-    {
-        name: "Web Development",
-        duration: "6 Months",
-        price: "₹15,000",
-        image: "WEB.jpeg",
-        description: "Learn front-end and back-end web development with HTML, CSS, JavaScript, and popular frameworks."
-    },
-    {
-        name: "App Development",
-        duration: "6 Months",
-        price: "₹16,000",
-        image: "APP.jpeg",
-        description: "Build mobile applications for Android and iOS platforms using modern development tools and languages."
-    },
-    {
-        name: "Software Development",
-        duration: "1 Year",
-        price: "₹20,000",
-        image: "SOF.jpeg",
-        description: "Comprehensive training in software engineering principles, development methodologies and project management."
-    },
-    {
-        name: "AI & Data Science",
-        duration: "1 Year",
-        price: "₹20,000",
-        image: "AI.jpeg",
-        description: "Cutting-edge course covering Artificial Intelligence, Machine Learning and Data Science fundamentals."
-    }
+    { name: "PGDCA", duration: "1 Year", price: "₹18,000", image: "PGDCA.jpg", description: "Post Graduate Diploma in Computer Applications covering advanced topics in programming, databases and software development." },
+    { name: "ADCA", duration: "1 Year", price: "₹15,000", image: "ADCA.jpeg", description: "Advanced Diploma in Computer Applications with focus on practical skills for office automation and basic programming." },
+    { name: "DCA", duration: "6 Months", price: "₹12,000", image: "DCA.jpeg", description: "Diploma in Computer Applications covering fundamental computer skills and office applications." },
+    { name: "Video & Photo Editing (Canva)", duration: "3 Months", price: "₹10,000", image: "canva.jpeg", description: "Master graphic design, photo and video editing using Canva for social media and professional use." },
+    { name: "Web Development", duration: "6 Months", price: "₹15,000", image: "WEB.jpeg", description: "Learn front-end and back-end web development with HTML, CSS, JavaScript, and popular frameworks." },
+    { name: "App Development", duration: "6 Months", price: "₹16,000", image: "APP.jpeg", description: "Build mobile applications for Android and iOS platforms using modern development tools and languages." },
+    { name: "Software Development", duration: "1 Year", price: "₹20,000", image: "SOF.jpeg", description: "Comprehensive training in software engineering principles, development methodologies and project management." },
+    { name: "AI & Data Science", duration: "1 Year", price: "₹20,000", image: "AI.jpeg", description: "Cutting-edge course covering Artificial Intelligence, Machine Learning and Data Science fundamentals." }
 ];
 
-// Populate course cards
 const courseList = document.getElementById("courseList");
-courses.forEach(c => {
-    const card = document.createElement("div");
-    card.className = "course-card";
-    card.innerHTML = `
-        <div class="course-img"><img src="${c.image}" alt="${c.name}"></div>
-        <div class="course-content">
-            <h3>${c.name}</h3>
-            <div class="course-meta"><span>${c.duration}</span><span>${c.price}</span></div>
-            <p class="course-desc">${c.description}</p>
-            <a href="javascript:void(0)" class="course-btn" onclick="openForm('${c.name}')">Enroll Now</a>
-        </div>
-    `;
-    courseList.appendChild(card);
+
+// Function to render courses
+function renderCourses(filter="") {
+    courseList.innerHTML = "";
+    courses.filter(c => c.name.toLowerCase().includes(filter.toLowerCase()))
+    .forEach(c => {
+        const card = document.createElement("div");
+        card.className = "course-card";
+        card.innerHTML = `
+            <div class="course-img"><img src="${c.image}" alt="${c.name}"></div>
+            <div class="course-content">
+                <h3>${c.name}</h3>
+                <div class="course-meta"><span>${c.duration}</span><span>${c.price}</span></div>
+                <p class="course-desc">${c.description}</p>
+                <a href="javascript:void(0)" class="course-btn" onclick="openForm('${c.name}')">Enroll Now</a>
+            </div>
+        `;
+        courseList.appendChild(card);
+    });
+}
+renderCourses();
+
+// Search filter
+document.getElementById("courseSearch").addEventListener("input", (e) => {
+    renderCourses(e.target.value);
 });
 
 function openForm(courseName) {
