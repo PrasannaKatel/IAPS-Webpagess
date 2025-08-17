@@ -145,6 +145,27 @@
   }
   .rupee::before{ content:"₹"; margin-right:4px; opacity:.9 }
   .brand{ font-size:12px; color:var(--muted) }
+  .account-details{
+    margin-top:20px;
+    padding:15px;
+    border:1px dashed var(--border);
+    border-radius:var(--radius-sm);
+    background:#0f1730;
+    font-size:14px;
+  }
+  .processing{
+    text-align:center;
+    font-size:20px;
+    font-weight:bold;
+    color:var(--accent-2);
+    margin-top:100px;
+  }
+  #countdown{
+    font-size:28px;
+    color:#fff;
+    display:block;
+    margin-top:15px;
+  }
 </style>
 </head>
 <body>
@@ -161,7 +182,7 @@
         <div>
           <label for="customerName">Full Name</label>
           <div class="input">
-            <input id="customerName" name="name" placeholder="e.g.: Rohit Sharma " required />
+            <input id="customerName" name="name" placeholder="e.g.: Rohit Sharma" required />
           </div>
           <div class="error" id="errName">Please enter your name</div>
         </div>
@@ -257,6 +278,17 @@
           <div class="error" id="errBank">Please select a bank</div>
         </div>
       </div>
+
+      <!-- Institute account details -->
+      <div class="account-details">
+        <h4>Institute Account Details</h4>
+        <p><strong>Account Name:</strong> IAPS Training Academy</p>
+        <p><strong>Bank Name:</strong> SBI</p>
+        <p><strong>Account No:</strong> 123456789012</p>
+        <p><strong>IFSC Code:</strong> SBIN0001234</p>
+        <p><strong>UPI ID:</strong> 9876543210@ibl </p>
+      </div>
+
       <div class="actions">
         <button type="button" class="btn btn-secondary" id="btnReset">Reset</button>
         <button type="submit" class="btn btn-primary">Pay Now</button>
@@ -264,6 +296,7 @@
       <p class="note">Demo UI — Payment gateway integration required for real payments.</p>
     </form>
   </section>
+
   <!-- Right: Summary -->
   <aside class="card summary">
     <div class="head">
@@ -286,7 +319,13 @@ document.addEventListener('DOMContentLoaded', function() {
   const methods = document.querySelectorAll('.pay-method');
   const methodPill = document.getElementById('methodPill');
 
-  // Tab switching
+  const sumPurpose = document.getElementById('sumPurpose');
+  const sumAmt = document.getElementById('sumAmt');
+  const sumTotal = document.getElementById('sumTotal');
+  const amountInput = document.getElementById('amount');
+  const purposeSelect = document.getElementById('purpose');
+
+  // Tab switching & update method summary
   tabs.forEach(tab => {
     tab.addEventListener('click', () => {
       tabs.forEach(t => t.classList.remove('active'));
@@ -297,15 +336,29 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  // Form submit validation + Receipt
+  // Update purpose in summary on change
+  purposeSelect.addEventListener('change', () => {
+    const selectedOption = purposeSelect.options[purposeSelect.selectedIndex].text;
+    sumPurpose.textContent = selectedOption;
+  });
+
+  // Update amount & total in summary on amount input
+  amountInput.addEventListener('input', () => {
+    let val = amountInput.value.trim();
+    if (/^\d*$/.test(val)) { // allow only digits or empty
+      sumAmt.textContent = val || '0';
+      sumTotal.textContent = val || '0';
+      document.getElementById('amountChip').textContent = val || '0';
+    }
+  });
+
+  // Form submit validation + receipt display + countdown
   form.addEventListener('submit', function(e) {
     e.preventDefault();
     let valid = true;
 
-    // Reset errors
     document.querySelectorAll('.error').forEach(el => el.style.display = 'none');
 
-    // Basic checks
     if (!document.getElementById('customerName').value.trim()) {
       document.getElementById('errName').style.display = 'block';
       valid = false;
@@ -335,39 +388,96 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (!valid) return;
 
-    // Auto institute name
     const instituteName = "IAPS Training Academy";
-
-    // Create receipt UI
     const name = document.getElementById('customerName').value.trim();
     const email = document.getElementById('customerEmail').value.trim();
     const amount = document.getElementById('amount').value.trim();
-    const purpose = document.getElementById('purpose').value;
+    const purpose = document.getElementById('purpose').options[document.getElementById('purpose').selectedIndex].text;
     const method = activeMethod;
     const date = new Date().toLocaleString();
+
+    // Get Institute account details based on payment method
+    let institutePaymentInfo = '';
+    if (method === 'Card' || method === 'NetBanking') {
+      // Show Bank details
+      let selectedBank = 'SBI';
+      if (method === 'NetBanking') {
+        selectedBank = document.getElementById('bank').value.trim() || 'SBI';
+      }
+      // You can expand account info per bank if you want here
+      institutePaymentInfo = `
+        <p><strong>Institute Bank:</strong> ${selectedBank}</p>
+        <p><strong>Account Number:</strong> 123456789012</p>
+        <p><strong>IFSC Code:</strong> SBIN0001234</p>
+      `;
+    } else if (method === 'UPI') {
+      const upi = document.getElementById('upiId').value.trim();
+      institutePaymentInfo = `
+        <p><strong>Institute UPI ID:</strong> 9876543210@ibl</p>
+        <p><strong>Payer UPI ID:</strong> ${upi}</p>
+      `;
+    }
 
     const receiptHTML = `
       <div style="background:#fff;padding:20px;border-radius:10px;color:#000;max-width:500px;margin:auto;box-shadow:0 5px 20px rgba(0,0,0,0.2);">
         <h2 style="text-align:center;color:#333;">${instituteName}</h2>
         <p style="text-align:center;color:#666;font-size:14px;margin-top:-8px;">Official Payment Receipt</p>
         <hr/>
-        <p><strong>Name:</strong> ${name}</p>
-        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Payer Name:</strong> ${name}</p>
+        <p><strong>Payer Email:</strong> ${email}</p>
         <p><strong>Purpose:</strong> ${purpose}</p>
         <p><strong>Payment Method:</strong> ${method}</p>
         <p><strong>Amount Paid:</strong> ₹${amount}</p>
         <p><strong>Date:</strong> ${date}</p>
         <hr/>
+        ${institutePaymentInfo}
+        <hr/>
         <p style="text-align:center;color:green;font-weight:bold;">Payment Successful</p>
       </div>
     `;
 
-    document.body.innerHTML = receiptHTML; // Replace page content with receipt
+    // Show processing with countdown
+    document.body.innerHTML = `
+      <div class="processing">
+        Processing payment...<br>
+        Please wait <span id="countdown">2:00</span>
+      </div>
+    `;
+
+    let timeLeft = 120; // seconds
+    const countdownEl = document.getElementById('countdown');
+    const timer = setInterval(() => {
+      timeLeft--;
+      const minutes = Math.floor(timeLeft / 60);
+      const seconds = timeLeft % 60;
+      countdownEl.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+      if (timeLeft <= 0) {
+        clearInterval(timer);
+        document.body.innerHTML = receiptHTML;
+      }
+    }, 1000);
   });
 
+  // Reset button clears form and errors
   document.getElementById('btnReset').addEventListener('click', function() {
     form.reset();
     document.querySelectorAll('.error').forEach(e => e.style.display = 'none');
+
+    // Reset summary values to default
+    sumPurpose.textContent = 'Other';
+    sumAmt.textContent = '0';
+    sumTotal.textContent = '0';
+    methodPill.textContent = 'Card';
+
+    amountInput.value = '';
+    document.getElementById('amountChip').textContent = '0';
+
+    // Reset tabs to Card tab active by default
+    tabs.forEach(t => t.classList.remove('active'));
+    methods.forEach(m => m.classList.remove('active'));
+    tabs[0].classList.add('active');
+    methods.classList.add('active');
   });
 });
 </script>
