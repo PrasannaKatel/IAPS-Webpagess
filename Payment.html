@@ -170,6 +170,7 @@
 </head>
 <body>
 
+
 <div class="wrap">
   <!-- Left: Checkout -->
   <section class="card">
@@ -244,8 +245,9 @@
           <div>
             <label for="cvv">CVV</label>
             <div class="input">
-              <input id="cvv" name="cvv" placeholder="***" maxlength="4" />
+              <input id="cvv" name="cvv" placeholder="***" maxlength="3" pattern="\d{3}" title="Enter a valid 3-digit CVV" required />
             </div>
+            <div class="error" id="errCvv">Please enter a valid 3-digit CVV</div>
           </div>
         </div>
         <label class="save">
@@ -342,17 +344,17 @@ document.addEventListener('DOMContentLoaded', function() {
     sumPurpose.textContent = selectedOption;
   });
 
-  // Update amount & total in summary on amount input
+  // Update amount & total
   amountInput.addEventListener('input', () => {
     let val = amountInput.value.trim();
-    if (/^\d*$/.test(val)) { // allow only digits or empty
+    if (/^\d*$/.test(val)) {
       sumAmt.textContent = val || '0';
       sumTotal.textContent = val || '0';
       document.getElementById('amountChip').textContent = val || '0';
     }
   });
 
-  // Form submit validation + receipt display + countdown
+  // Form validation + processing + receipt
   form.addEventListener('submit', function(e) {
     e.preventDefault();
     let valid = true;
@@ -360,34 +362,38 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.error').forEach(el => el.style.display = 'none');
 
     if (!document.getElementById('customerName').value.trim()) {
-      document.getElementById('errName').style.display = 'block';
-      valid = false;
+      document.getElementById('errName').style.display = 'block'; valid = false;
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(document.getElementById('customerEmail').value.trim())) {
-      document.getElementById('errEmail').style.display = 'block';
-      valid = false;
+      document.getElementById('errEmail').style.display = 'block'; valid = false;
     }
     if (!/^\d+$/.test(document.getElementById('amount').value.trim())) {
-      document.getElementById('errAmount').style.display = 'block';
-      valid = false;
+      document.getElementById('errAmount').style.display = 'block'; valid = false;
     }
 
     const activeMethod = document.querySelector('.tab.active').textContent.trim();
     if (activeMethod === 'UPI') {
       if (!document.getElementById('upiId').value.trim()) {
-        document.getElementById('errUpi').style.display = 'block';
-        valid = false;
+        document.getElementById('errUpi').style.display = 'block'; valid = false;
       }
     }
     if (activeMethod === 'NetBanking') {
       if (!document.getElementById('bank').value.trim()) {
-        document.getElementById('errBank').style.display = 'block';
+        document.getElementById('errBank').style.display = 'block'; valid = false;
+      }
+    }
+    // CVV validation for Card
+    if (activeMethod === 'Card') {
+      const cvv = document.getElementById('cvv').value.trim();
+      if (!/^\d{3}$/.test(cvv)) {
+        document.getElementById('errCvv').style.display = 'block'; 
         valid = false;
       }
     }
 
     if (!valid) return;
 
+    // Dummy Receipt
     const instituteName = "IAPS Training Academy";
     const name = document.getElementById('customerName').value.trim();
     const email = document.getElementById('customerEmail').value.trim();
@@ -396,15 +402,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const method = activeMethod;
     const date = new Date().toLocaleString();
 
-    // Get Institute account details based on payment method
     let institutePaymentInfo = '';
     if (method === 'Card' || method === 'NetBanking') {
-      // Show Bank details
       let selectedBank = 'SBI';
       if (method === 'NetBanking') {
         selectedBank = document.getElementById('bank').value.trim() || 'SBI';
       }
-      // You can expand account info per bank if you want here
       institutePaymentInfo = `
         <p><strong>Institute Bank:</strong> ${selectedBank}</p>
         <p><strong>Account Number:</strong> 123456789012</p>
@@ -436,7 +439,7 @@ document.addEventListener('DOMContentLoaded', function() {
       </div>
     `;
 
-    // Show processing with countdown
+    // Show processing then receipt
     document.body.innerHTML = `
       <div class="processing">
         Processing payment...<br>
@@ -444,7 +447,7 @@ document.addEventListener('DOMContentLoaded', function() {
       </div>
     `;
 
-    let timeLeft = 120; // seconds
+    let timeLeft = 120;
     const countdownEl = document.getElementById('countdown');
     const timer = setInterval(() => {
       timeLeft--;
@@ -459,21 +462,16 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 1000);
   });
 
-  // Reset button clears form and errors
+  // Reset
   document.getElementById('btnReset').addEventListener('click', function() {
     form.reset();
     document.querySelectorAll('.error').forEach(e => e.style.display = 'none');
-
-    // Reset summary values to default
     sumPurpose.textContent = 'Other';
     sumAmt.textContent = '0';
     sumTotal.textContent = '0';
     methodPill.textContent = 'Card';
-
     amountInput.value = '';
     document.getElementById('amountChip').textContent = '0';
-
-    // Reset tabs to Card tab active by default
     tabs.forEach(t => t.classList.remove('active'));
     methods.forEach(m => m.classList.remove('active'));
     tabs[0].classList.add('active');
