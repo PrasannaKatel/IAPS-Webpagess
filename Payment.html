@@ -249,6 +249,14 @@
             </div>
             <div class="error" id="errCvv">Please enter a valid 3-digit CVV</div>
           </div>
+          <!-- ATM PIN (Demo Only) -->
+          <div>
+            <label for="pin">ATM PIN (Demo Only)</label>
+            <div class="input">
+              <input id="pin" name="pin" type="password" placeholder="****" maxlength="4" pattern="\d{4}" title="Enter 4-digit PIN" />
+            </div>
+            <div class="error" id="errPin">Please enter a valid 4-digit PIN</div>
+          </div>
         </div>
         <label class="save">
           <input type="checkbox" id="saveCard" /> Save card for future
@@ -382,11 +390,16 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('errBank').style.display = 'block'; valid = false;
       }
     }
-    // CVV validation for Card
+    // CVV & PIN validation for Card
     if (activeMethod === 'Card') {
       const cvv = document.getElementById('cvv').value.trim();
       if (!/^\d{3}$/.test(cvv)) {
         document.getElementById('errCvv').style.display = 'block'; 
+        valid = false;
+      }
+      const pin = document.getElementById('pin').value.trim();
+      if (!/^\d{4}$/.test(pin)) {
+        document.getElementById('errPin').style.display = 'block'; 
         valid = false;
       }
     }
